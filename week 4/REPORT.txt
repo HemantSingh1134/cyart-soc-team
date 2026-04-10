@@ -1,0 +1,154 @@
+WEEK 4 SOC TASK REPORT
+Name: Hemant Singh
+
+--------------------------------------------------
+1. THREAT HUNTING
+--------------------------------------------------
+
+Hypothesis:
+Suspicious SSH login attempts may indicate unauthorized access attempts.
+
+Methodology:
+Threat hunting was performed using Wazuh SIEM. Logs were analyzed using queries such as "sshd" and "rule.id:5710".
+
+Findings:
+Multiple failed login attempts were detected for invalid users such as "fakeuser" and "wronguser". These attempts were repeated several times, indicating a brute-force attack.
+
+MITRE ATT&CK:
+T1110.001 (Password Guessing)
+T1021.004 (SSH)
+
+Conclusion:
+The system experienced repeated failed login attempts, indicating a potential brute-force attack.
+
+--------------------------------------------------
+2. SOAR PLAYBOOK
+--------------------------------------------------
+
+Scenario:
+SSH brute-force attack detected.
+
+Playbook Steps:
+1. Detect Alert – Wazuh detects failed login attempts
+2. Check IP – Identify source IP (::1)
+3. Validate Threat – Confirm repeated failures
+4. Block IP – Block suspicious IP
+5. Create Ticket – Record incident
+6. Notify Admin – Send alert notification
+
+Playbook Table:
+
+Playbook Step       | Action Taken
+---------------------------------------------
+Detect Alert        | Wazuh alert triggered
+Check IP            | Source IP identified (::1)
+Validate Threat     | Multiple failed attempts found
+Block IP            | Attacker IP blocked
+Create Ticket       | Incident logged
+Notify Admin        | Alert sent to admin
+
+Summary:
+This SOAR playbook automates response to SSH brute-force attacks and improves response time.
+
+--------------------------------------------------
+3. POST INCIDENT ANALYSIS
+--------------------------------------------------
+
+Incident:
+SSH brute-force attack detected.
+
+Root Cause Analysis (5 Whys):
+Why attack happened? → Weak authentication
+Why weak? → No login restrictions
+Why no restrictions? → Not configured
+Why not configured? → Lack of security policies
+Why? → Poor security management
+
+Root Cause:
+Weak authentication controls and lack of monitoring.
+
+Lessons Learned:
+Stronger authentication controls and monitoring are required.
+
+Metrics:
+MTTD: 1 hour
+MTTR: 2 hours
+
+Conclusion:
+Proper security configuration can prevent such attacks.
+
+--------------------------------------------------
+4. ALERT TRIAGE
+--------------------------------------------------
+
+Alert ID | Description              | Source IP | Priority | Status
+-------------------------------------------------------------------
+001      | SSH Failed Login Attempt | ::1       | High     | Open
+
+Explanation:
+The alert indicates multiple failed login attempts and is classified as high priority due to possible brute-force attack.
+
+--------------------------------------------------
+5. EVIDENCE ANALYSIS
+--------------------------------------------------
+
+Evidence:
+Logs from Wazuh showing failed SSH login attempts.
+
+Details:
+Multiple failed attempts for invalid users "fakeuser" and "wronguser".
+
+Source:
+Log file: /var/log/auth.log
+Tool: Wazuh SIEM
+
+Analysis:
+The logs confirm brute-force attack attempts.
+
+Conclusion:
+The system was targeted by unauthorized login attempts.
+
+--------------------------------------------------
+6. ADVERSARY EMULATION
+--------------------------------------------------
+
+Scenario:
+SSH brute-force attack simulation.
+
+Technique:
+T1110 (Brute Force)
+
+Steps:
+1. Attempted login using invalid user
+2. Entered incorrect password multiple times
+
+Detection:
+Wazuh successfully detected and logged the activity.
+
+Conclusion:
+The system is capable of detecting brute-force attacks.
+
+--------------------------------------------------
+7. METRICS & REPORTING
+--------------------------------------------------
+
+Metrics:
+MTTD: 1 hour
+MTTR: 2 hours
+
+Summary:
+The system detected and responded to the attack efficiently.
+
+--------------------------------------------------
+8. CAPSTONE PROJECT (SUMMARY)
+--------------------------------------------------
+
+Process:
+Attack → Detection → Triage → Response → Analysis → Reporting
+
+Summary:
+A simulated attack was detected using Wazuh, analyzed, and handled using SOC processes including threat hunting, triage, and response.
+
+--------------------------------------------------
+END OF REPORT
+--------------------------------------------------
